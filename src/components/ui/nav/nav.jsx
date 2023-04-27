@@ -26,6 +26,10 @@ export function NavBarComponent() {
     setPatternMenu(null);
   };
 
+  function runDijkstra() {
+    console.log("Dijkstra");
+  }
+
   return (
     <nav className="navbar">
       <li className="button-wrapper">
@@ -47,9 +51,7 @@ export function NavBarComponent() {
           open={openAlgoMenu}
           onClose={algoMenuClose}
         >
-          <MenuItem onClick={algoMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={algoMenuClose}>My account</MenuItem>
-          <MenuItem onClick={algoMenuClose}>Logout</MenuItem>
+          <MenuItem onClick={algoMenuClose}>Dijkstra</MenuItem>
         </Menu>
       </li>
       <li className="button-wrapper">
@@ -72,7 +74,7 @@ export function NavBarComponent() {
         </Menu>
       </li>
       <li className="button-wrapper">
-        <Button variant="contained" size="large">
+        <Button variant="contained" size="large" onClick={runDijkstra}>
           Start Maze!
         </Button>
       </li>
