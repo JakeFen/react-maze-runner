@@ -5,6 +5,7 @@ export function GridComponent({
   grid,
   nodeMouseDown,
   nodeMouseEnter,
+  nodeMouseOver,
   nodeMouseUp,
 }) {
   return (
@@ -19,6 +20,7 @@ export function GridComponent({
                   node={node}
                   nodeMouseDown={nodeMouseDown}
                   nodeMouseEnter={nodeMouseEnter}
+                  nodeMouseOver={nodeMouseOver}
                   nodeMouseUp={nodeMouseUp}
                 />
               );

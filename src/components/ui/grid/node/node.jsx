@@ -4,6 +4,7 @@ export function NodeComponent({
   node,
   nodeMouseDown,
   nodeMouseEnter,
+  nodeMouseOver,
   nodeMouseUp,
 }) {
   const classNode = node.isStart
@@ -19,6 +20,7 @@ export function NodeComponent({
       className={`node ${classNode}`}
       onMouseDown={() => nodeMouseDown(node)}
       onMouseEnter={() => nodeMouseEnter(node)}
+      onMouseOver={() => nodeMouseOver(node)}
       onMouseUp={() => nodeMouseUp()}
     ></div>
   );
