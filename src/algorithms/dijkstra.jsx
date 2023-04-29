@@ -1,6 +1,4 @@
-import { useState } from "react";
-
-export function runDijkstra(grid, setGrid, startNode, finishNode) {
+export function runDijkstra(grid, startNode, finishNode, setGrid) {
   const visitedNodesInOrder = [];
   startNode.distance = 0;
   const unvisitedNodes = grid.flat();
@@ -9,12 +7,12 @@ export function runDijkstra(grid, setGrid, startNode, finishNode) {
     sortNodesByDistance(unvisitedNodes);
     const closestNode = unvisitedNodes.shift();
 
-    closestNode.isVisited = true;
+    // closestNode.isVisited = true;
     visitedNodesInOrder.push(closestNode);
     if (closestNode === finishNode) {
       return visitedNodesInOrder;
     }
-    updateUnvisitedNeighbors(closestNode, grid);
+    updateUnvisitedNeighbors(closestNode, grid, setGrid);
   }
 }
 
@@ -22,7 +20,7 @@ function sortNodesByDistance(unvisitedNodes) {
   return unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
-function updateUnvisitedNeighbors(prevNode, grid) {
+function updateUnvisitedNeighbors(prevNode, grid, setGrid) {
   const unvisitedNeighbors = getNeighborNodes(prevNode, grid);
   for (const neighbor of unvisitedNeighbors) {
     neighbor.distance = prevNode.distance + 1;
@@ -38,5 +36,6 @@ function getNeighborNodes(node, grid) {
   if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
   if (col > 0) neighbors.push(grid[row][col - 1]);
   if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-  return neighbors.filter((neighbor) => !neighbor.isVisited);
+  return neighbors.filter((neighbor) => (neighbor.distance === Infinity));
+  return neighbors;
 }

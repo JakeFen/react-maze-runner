@@ -28,6 +28,7 @@ export function MazeRunnerComponent() {
           isFinish: row === finishNode.row && col === finishNode.col,
           distance: Infinity,
           isVisited: false,
+          shortestPath: false,
           previousNode: null,
         });
       }
@@ -105,23 +106,54 @@ export function MazeRunnerComponent() {
     });
   }
 
-  function updateGrid(newGrid) {
-    console.log("Grid: ", grid);
-    // for (const currentNode of newGrid) {
-    //   setTimeout(() => {
-    //     console.log(currentNode);
-    //     setGrid((grid) => {
-    //       return grid.map((row) => {
-    //         return row.map((node) => {
-    //           return currentNode.row === node.row &&
-    //             currentNode.col === node.col
-    //             ? { ...node, isVisited: currentNode.isVisited }
-    //             : node;
-    //         });
-    //       });
-    //     });
-    //   }, 1000);
-    // }
+  function visualizeAlgo(newGrid, shortestPath) {
+    for (var i = 0; i < newGrid.length; i++) {
+      const newNode = newGrid[i];
+      setTimeout(() => {
+        setGrid((grid) => {
+          return grid.map((row) => {
+            return row.map((node) => {
+              return newNode.row === node.row && newNode.col === node.col
+                ? { ...node, isVisited: true }
+                : node;
+            });
+          });
+        });
+      }, 10 * i);
+    }
+
+    visualizeFastestPath(shortestPath);
+  }
+
+  function visualizeFastestPath(shortestPath) {
+    for (var i = 0; i < shortestPath.length; i++) {
+      const newNode = shortestPath[i];
+
+      setTimeout(() => {
+        setGrid((grid) => {
+          return grid.map((row) => {
+            return row.map((node) => {
+              return newNode.row === node.row && newNode.col === node.col
+                ? { ...node, shortestPath: true }
+                : node;
+            });
+          });
+        });
+      }, 10 * i);
+    }
+  }
+
+  function fastestPath(finishNode) {
+    const shortestPath = [];
+    let currentNode = finishNode;
+
+    // Start from final node, add to our array, then update our current node with the previous node property
+    while (currentNode !== null) {
+      shortestPath.unshift(currentNode);
+      currentNode = currentNode.previousNode;
+    }
+
+    return shortestPath;
   }
 
   function runAlgo() {
@@ -130,8 +162,9 @@ export function MazeRunnerComponent() {
     const finishNode = flatGrid.find((node) => node.isFinish);
     switch (selectedAlgo) {
       case "Dijkstra":
-        const visitedNodes = runDijkstra(grid, setGrid, startNode, finishNode);
-        // updateGrid(visitedNodes);
+        const newGrid = runDijkstra(grid, startNode, finishNode, setGrid);
+        const shortestPath = fastestPath(finishNode);
+        visualizeAlgo(newGrid, shortestPath);
         return true;
       case "AStar":
         return RunAStar(grid, startNode, finishNode);
