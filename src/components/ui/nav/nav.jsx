@@ -5,7 +5,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-export function NavBarComponent() {
+export function NavBarComponent({ runAlgo, updateAlgo, clearBoard }) {
   const [algoMenu, setAlgoMenu] = React.useState(null);
   const openAlgoMenu = Boolean(algoMenu);
 
@@ -15,20 +15,19 @@ export function NavBarComponent() {
   const algoMenuClick = (event) => {
     setAlgoMenu(event.currentTarget);
   };
-  const algoMenuClose = () => {
+
+  const algoMenuClose = (data) => {
     setAlgoMenu(null);
+    updateAlgo(data);
   };
 
   const PatternMenuClick = (event) => {
     setPatternMenu(event.currentTarget);
   };
+
   const PatternMenuClose = () => {
     setPatternMenu(null);
   };
-
-  function runDijkstra() {
-    console.log("Dijkstra");
-  }
 
   return (
     <nav className="navbar">
@@ -51,7 +50,10 @@ export function NavBarComponent() {
           open={openAlgoMenu}
           onClose={algoMenuClose}
         >
-          <MenuItem onClick={algoMenuClose}>Dijkstra</MenuItem>
+          <MenuItem onClick={() => algoMenuClose("Dijkstra")}>
+            Dijkstra
+          </MenuItem>
+          <MenuItem onClick={() => algoMenuClose("AStar")}>A*</MenuItem>
         </Menu>
       </li>
       <li className="button-wrapper">
@@ -74,7 +76,7 @@ export function NavBarComponent() {
         </Menu>
       </li>
       <li className="button-wrapper">
-        <Button variant="contained" size="large" onClick={runDijkstra}>
+        <Button variant="contained" size="large" onClick={runAlgo}>
           Start Maze!
         </Button>
       </li>
@@ -92,6 +94,7 @@ export function NavBarComponent() {
           sx={{ color: "#fff", "text-transform": "inherit" }}
           variant="text"
           size="large"
+          onClick={clearBoard}
         >
           Clear Board
         </Button>

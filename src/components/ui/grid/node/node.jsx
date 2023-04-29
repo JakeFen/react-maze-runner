@@ -13,6 +13,8 @@ export function NodeComponent({
     ? "finish-node"
     : node.isWall
     ? "wall-node"
+    : node.isVisited
+    ? "visited-node"
     : "";
 
   return (

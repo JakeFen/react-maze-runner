@@ -2,12 +2,15 @@ import { NavBarComponent } from "../ui/nav/nav";
 import { GridComponent } from "../ui/grid/grid";
 import { KeyBarComponent } from "../ui/keybar/keybar";
 import { useState } from "react";
+import { runDijkstra } from "../../algorithms/dijkstra";
+import { RunAStar } from "../../algorithms/aStar";
 
 export function MazeRunnerComponent() {
   const [grid, setGrid] = useState(createGrid());
   const [mouseDown, setMouseDown] = useState(false);
   const [moveStartNode, setMoveStartNode] = useState(false);
   const [MoveFinishNode, setMoveFinishNode] = useState(false);
+  const [selectedAlgo, setSlectedAlgo] = useState("Dijkstra");
 
   function createGrid() {
     const startNode = { row: 10, col: 10 };
@@ -23,6 +26,9 @@ export function MazeRunnerComponent() {
           isWall: false,
           isStart: row === startNode.row && col === startNode.col,
           isFinish: row === finishNode.row && col === finishNode.col,
+          distance: Infinity,
+          isVisited: false,
+          previousNode: null,
         });
       }
       grid.push(gridRow);
@@ -99,9 +105,54 @@ export function MazeRunnerComponent() {
     });
   }
 
+  function updateGrid(newGrid) {
+    console.log("Grid: ", grid);
+    // for (const currentNode of newGrid) {
+    //   setTimeout(() => {
+    //     console.log(currentNode);
+    //     setGrid((grid) => {
+    //       return grid.map((row) => {
+    //         return row.map((node) => {
+    //           return currentNode.row === node.row &&
+    //             currentNode.col === node.col
+    //             ? { ...node, isVisited: currentNode.isVisited }
+    //             : node;
+    //         });
+    //       });
+    //     });
+    //   }, 1000);
+    // }
+  }
+
+  function runAlgo() {
+    const flatGrid = grid.flat();
+    const startNode = flatGrid.find((node) => node.isStart);
+    const finishNode = flatGrid.find((node) => node.isFinish);
+    switch (selectedAlgo) {
+      case "Dijkstra":
+        const visitedNodes = runDijkstra(grid, setGrid, startNode, finishNode);
+        // updateGrid(visitedNodes);
+        return true;
+      case "AStar":
+        return RunAStar(grid, startNode, finishNode);
+    }
+  }
+
+  function updateAlgo(data) {
+    setSlectedAlgo(data);
+  }
+
+  function clearBoard() {
+    setGrid(createGrid());
+  }
+
   return (
     <div>
-      <NavBarComponent />
+      <NavBarComponent
+        runAlgo={runAlgo}
+        updateAlgo={updateAlgo}
+        clearBoard={clearBoard}
+      />
       <KeyBarComponent />
       <GridComponent
         grid={grid}
